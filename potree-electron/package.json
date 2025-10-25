@@ -1,0 +1,50 @@
+{
+  "name": "potree-electron",
+  "version": "1.0.0",
+  "description": "Application Electron pour convertir un fichier LAS en dossier web Potree et le préparer à la publication.",
+  "main": "main.js",
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.example.potreeelectron",
+    "productName": "Potree Web Packager",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**"
+    ],
+    "extraResources": [
+      {
+        "from": "../PotreeConverter",
+        "to": "PotreeConverter",
+        "filter": [
+          "PotreeConverter.exe",
+          "laszip.dll",
+          "licenses/**",
+          "resources/**"
+        ]
+      }
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
+
+

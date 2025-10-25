@@ -1,0 +1,35 @@
+name: Build Windows Portable
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install deps
+        working-directory: potree-electron
+        run: |
+          npm ci
+
+      - name: Build portable
+        working-directory: potree-electron
+        run: |
+          npm run dist
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: potree-web-packager-win
+          path: potree-electron/dist/**
+
