@@ -65,7 +65,7 @@ function copyWebTemplate(toDir) {
 	copyRecursive(path.join(templateDir, 'libs'), destLibs);
 }
 
-function writeIndexHtml(outDir, title, footerHtml) {
+function writeIndexHtml(outDir, title, footerHtml, metadataUrl) {
 	var html = '';
 	html += '<!DOCTYPE html>\n';
 	html += '<html lang="fr">\n';
@@ -106,7 +106,7 @@ function writeIndexHtml(outDir, title, footerHtml) {
 	html += '\t\tviewer.loadGUI(function () {\n';
 	html += '\t\t\tviewer.setLanguage(\'fr\');\n';
 	html += '\t\t});\n';
-	html += '\t\tPotree.loadPointCloud(\'./metadata.json\').then(function (e) {\n';
+	html += '\t\tPotree.loadPointCloud(\'' + (metadataUrl || './metadata.json') + '\').then(function (e) {\n';
 	html += '\t\t\tviewer.scene.addPointCloud(e.pointcloud);\n';
 	html += '\t\t\tviewer.fitToScreen();\n';
 	html += '\t\t});\n';
@@ -143,13 +143,19 @@ ipcMain.handle('run-convert', async (event, { lasPath, outDir, title }) => {
 
 	if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
+	// Structure classique: pointclouds/<dataset>/
+	const datasetName = path.basename(lasPath, path.extname(lasPath));
+	const pointcloudDir = path.join(outDir, 'pointclouds', datasetName);
+	if (!fs.existsSync(pointcloudDir)) fs.mkdirSync(pointcloudDir, { recursive: true });
+
 	copyWebTemplate(outDir);
 
 	const footer = 'Construit avec <a href="https://github.com/potree/potree" target="_blank" rel="noreferrer">Potree</a> et <a href="https://github.com/potree/PotreeConverter" target="_blank" rel="noreferrer">PotreeConverter</a>.';
-	writeIndexHtml(outDir, title, footer);
+	// Index pointe vers pointclouds/<dataset>/metadata.json
+	writeIndexHtml(outDir, title, footer, `./pointclouds/${datasetName}/metadata.json`);
 
 	return new Promise((resolve, reject) => {
-		const args = [lasPath, '-o', outDir];
+		const args = [lasPath, '-o', pointcloudDir];
 		const child = spawn(exe, args, { windowsHide: true });
 
 		child.stdout.on('data', data => {
