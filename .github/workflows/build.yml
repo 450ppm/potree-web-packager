@@ -60,29 +60,50 @@ jobs:
             potree-electron/dist/potree-web-packager-win.zip
             potree-electron/dist/*.exe
 
-      - name: Upload Release assets (on tag)
+      - name: Upload Release ZIP (on tag)
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: svenstaro/upload-release-action@v2
         with:
-          files: |
-            potree-electron/dist/potree-web-packager-win.zip
-            potree-electron/dist/*.exe
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: potree-electron/dist/potree-web-packager-win.zip
+          tag: ${{ github.ref_name }}
+          asset_name: potree-web-packager-win.zip
+          release_name: ${{ github.ref_name }}
           overwrite: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
 
-      - name: Upload Continuous Release (on main)
-        if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v1
+      - name: Upload Release EXE (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
         with:
-          tag_name: continuous
-          name: Continuous build
-          draft: false
-          prerelease: true
-          files: |
-            potree-electron/dist/potree-web-packager-win.zip
-            potree-electron/dist/*.exe
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: potree-electron/dist/*.exe
+          file_glob: true
+          tag: ${{ github.ref_name }}
           overwrite: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+
+      - name: Upload Continuous ZIP (on main)
+        if: github.ref == 'refs/heads/main'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: potree-electron/dist/potree-web-packager-win.zip
+          tag: continuous
+          asset_name: potree-web-packager-win.zip
+          release_name: Continuous build
+          overwrite: true
+          prerelease: true
+
+      - name: Upload Continuous EXE (on main)
+        if: github.ref == 'refs/heads/main'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: potree-electron/dist/*.exe
+          file_glob: true
+          tag: continuous
+          release_name: Continuous build
+          overwrite: true
+          prerelease: true
 
