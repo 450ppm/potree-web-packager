@@ -52,6 +52,12 @@ git push -u origin main
 2. GitHub Actions (déjà fourni) va construire un exécutable Windows portable à chaque push sur `main`. Récupérez l’artefact dans l’onglet "Actions".
 3. Pour publier une Release avec binaire, créez un tag et une release dans GitHub; l’artefact peut être joint manuellement ou automatisé par un workflow ultérieur.
 
+### Téléchargement facile
+- Dernière build continue (pré-release):
+  - `https://github.com/450ppm/potree-web-packager/releases/tag/continuous`
+- Releases versionnées (ex: v1.0.0):
+  - `https://github.com/450ppm/potree-web-packager/releases`
+
 ## Publication du dossier web
 - Uploadez l’intégralité du dossier de sortie (y compris `libs/`) sur votre serveur web
 - La page `index.html` inclut en pied de page une mention des projets open-source Potree et PotreeConverter (BSD 2-clause)

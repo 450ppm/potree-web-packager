@@ -27,9 +27,44 @@ jobs:
         run: |
           npm run dist
 
-      - name: Upload artifact
+      - name: Archive EXE to ZIP
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path "potree-electron/dist/*.exe" | Select-Object -First 1
+          if (-not $exe) { Write-Error "Executable .exe not found in dist"; exit 1 }
+          $zip = "potree-electron/dist/potree-web-packager-win.zip"
+          if (Test-Path $zip) { Remove-Item -Force $zip }
+          Compress-Archive -Path $exe.FullName -DestinationPath $zip
+
+      - name: Upload artifacts (ZIP + EXE)
         uses: actions/upload-artifact@v4
         with:
           name: potree-web-packager-win
-          path: potree-electron/dist/**
+          path: |
+            potree-electron/dist/potree-web-packager-win.zip
+            potree-electron/dist/*.exe
+
+      - name: Upload Release assets (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            potree-electron/dist/potree-web-packager-win.zip
+            potree-electron/dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Continuous Release (on main)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: continuous
+          name: Continuous build
+          draft: false
+          prerelease: true
+          files: |
+            potree-electron/dist/potree-web-packager-win.zip
+            potree-electron/dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
