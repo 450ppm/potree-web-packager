@@ -1,6 +1,8 @@
 ## Potree Web Packager
 
-➡️ Télécharger et lancer l’application Windows (ZIP): [Releases](https://github.com/450ppm/potree-web-packager/releases)
+➡️ Télécharger et lancer l’application Windows (ZIP) — un seul clic:
+- [Téléchargement direct](https://github.com/450ppm/potree-web-packager/releases/download/continuous/potree-web-packager-win.zip)
+- Alternative (toutes les versions): [Releases](https://github.com/450ppm/potree-web-packager/releases)
 
 Application Electron pour convertir un fichier LAS/LAZ en dossier web Potree prêt à publier (avec mention open‑source en pied de page).
 
