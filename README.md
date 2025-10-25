@@ -20,7 +20,7 @@ Application Electron pour convertir un fichier LAS/LAZ en dossier web Potree pr�
    - Cliquez sur « Exécuter ».
 4. Le dossier de sortie contient `index.html`, `metadata.json`, les données et `libs/`. Uploadez l’intégralité du dossier sur votre serveur web.
 
-### Caractéristiques
+### Caractéristiques f
 - Intègre Potree et PotreeConverter; copie automatique du template web et génération d’un `index.html` prêt à l’emploi.
 - Pied de page avec mention des projets open‑source.
 - Interface sombre (fond noir) avec Bootstrap; logo `450ppm` affiché automatiquement si `450ppm.png/.jpg/.jpeg/.svg` est présent à la racine.
