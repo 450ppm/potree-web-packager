@@ -5,6 +5,13 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+concurrency:
+  group: build-windows
+  cancel-in-progress: true
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -60,6 +67,7 @@ jobs:
           files: |
             potree-electron/dist/potree-web-packager-win.zip
             potree-electron/dist/*.exe
+          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -74,6 +82,7 @@ jobs:
           files: |
             potree-electron/dist/potree-web-packager-win.zip
             potree-electron/dist/*.exe
+          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

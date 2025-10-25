@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
+const { pathToFileURL } = require('url');
 
 let mainWindow;
 
@@ -166,14 +167,21 @@ ipcMain.handle('run-convert', async (event, { lasPath, outDir, title }) => {
 });
 
 ipcMain.handle('get-logo', async () => {
-	// Recherche d'un logo dans E:\\Outils (ex: 450ppm.*)
+	// Recherche d'un logo 450ppm.* dans différents emplacements probables
 	try {
-		const base = path.resolve(__dirname, '..');
-		const toolsDir = base; // Dossier racine attendu: E:\\Outils
+		const searchRoots = [
+			path.resolve(__dirname, '..'),
+			process.cwd(),
+			'E:\\Outils'
+		];
 		const candidates = ['450ppm.png', '450ppm.jpg', '450ppm.jpeg', '450ppm.svg'];
-		for (const name of candidates) {
-			const full = path.join(toolsDir, name);
-			if (fs.existsSync(full)) return full;
+		for (const root of searchRoots) {
+			for (const name of candidates) {
+				const full = path.join(root, name);
+				if (fs.existsSync(full)) {
+					return pathToFileURL(full).toString();
+				}
+			}
 		}
 		return null;
 	} catch (e) {
